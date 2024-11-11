@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Style Transfer</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        h1 { text-align: center; }
+        .container { display: flex; justify-content: space-around; padding: 20px; }
+        .image-upload { margin: 20px; }
+        img { max-width: 400px; max-height: 400px; }
+        .result { text-align: center; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <h1>Neural Style Transfer</h1>
+    <div class="container">
+        <!-- Content and Style Image Upload -->
+        <div class="image-upload">
+            <h2>Upload Content Image</h2>
+            <input type="file" id="content" name="content" accept="image/*">
+        </div>
+        <div class="image-upload">
+            <h2>Upload Style Image</h2>
+            <input type="file" id="style" name="style" accept="image/*">
+        </div>
+    </div>
+
+    <div class="result">
+        <button onclick="submitImages()">Generate Image</button>
+        <br><br>
+        <h2>Result Image</h2>
+        <img id="result" src="" alt="Result Image">
+    </div>
+
+    <script>
+        function submitImages() {
+            const contentFile = document.getElementById('content').files[0];
+            const styleFile = document.getElementById('style').files[0];
+            const formData = new FormData();
+            formData.append('content', contentFile);
+            formData.append('style', styleFile);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').src = data.result_image;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+
+</body>
+</html>
